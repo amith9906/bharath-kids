@@ -146,12 +146,24 @@ const MyQuotations = () => {
                           {getStatusBadge(quotation.status)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right">
-                          <Link
-                            to={`/quotations/${quotation.id}`}
-                            className="text-primary-600 hover:text-primary-700"
-                          >
-                            <FiEye className="w-5 h-5 inline" />
-                          </Link>
+                          {/* Only show view icon for admin, else show download button */}
+                          {window.localStorage.getItem('user') && JSON.parse(window.localStorage.getItem('user')).role === 'admin' ? (
+                            <Link
+                              to={`/quotations/${quotation.id}`}
+                              className="text-primary-600 hover:text-primary-700"
+                            >
+                              <FiEye className="w-5 h-5 inline" />
+                            </Link>
+                          ) : (
+                            <a
+                              href={quotation.pdfUrl || `/api/quotations/${quotation.id}/pdf`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn btn-secondary"
+                            >
+                              Download PDF
+                            </a>
+                          )}
                         </td>
                       </tr>
                     ))}

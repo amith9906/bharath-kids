@@ -116,6 +116,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/quotations/:id"
+              element={
+                <ProtectedRoute>
+                  <PublicLayout>
+                    <QuotationDetails />
+                  </PublicLayout>
+                </ProtectedRoute>
+              }
+            />
 
             {/* Admin Routes */}
             <Route
