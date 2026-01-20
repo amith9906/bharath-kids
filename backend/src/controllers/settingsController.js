@@ -83,7 +83,7 @@ const updateStoreSettings = async (req, res) => {
           fs.unlinkSync(oldLogoPath);
         }
       }
-      updateData.logoUrl = `/uploads/logos/${req.file.filename}`;
+      updateData.logoUrl = `/uploads/items/${req.file.filename}`;
     }
 
     if (!settings) {
@@ -119,7 +119,7 @@ const uploadLogo = async (req, res) => {
       }
     }
 
-    const logoUrl = `/uploads/logos/${req.file.filename}`;
+    const logoUrl = `/uploads/items/${req.file.filename}`;
 
     if (!settings) {
       settings = await StoreSettings.create({ logoUrl });
