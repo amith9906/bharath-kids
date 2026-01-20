@@ -55,14 +55,21 @@ export const authAPI = {
 export const itemsAPI = {
   getItems: (params) => api.get('/items', { params }),
   getItem: (id) => api.get(`/items/${id}`),
-  getCategories: () => api.get('/items/categories')
+  getCategories: () => api.get('/items/categories'),
+  getBrands: () => api.get('/items/brands')
 };
 
 // Quotations APIs
 export const quotationsAPI = {
   create: (data) => api.post('/quotations', data),
   getMyQuotations: (params) => api.get('/quotations/my', { params }),
-  getQuotation: (id) => api.get(`/quotations/${id}`)
+  getQuotation: (id) => api.get(`/quotations/${id}`),
+  downloadPDF: (id) => api.get(`/quotations/${id}/pdf`)
+};
+
+// Settings APIs (public)
+export const settingsAPI = {
+  getStoreSettings: () => api.get('/settings/store')
 };
 
 // Admin APIs
@@ -89,7 +96,25 @@ export const adminAPI = {
   // Quotations
   getQuotations: (params) => api.get('/admin/quotations', { params }),
   getQuotation: (id) => api.get(`/admin/quotations/${id}`),
-  updateQuotationStatus: (id, data) => api.patch(`/admin/quotations/${id}/status`, data)
+  updateQuotationStatus: (id, data) => api.patch(`/admin/quotations/${id}/status`, data),
+  editQuotation: (id, data) => api.put(`/admin/quotations/${id}/edit`, data),
+  generatePDF: (id) => api.post(`/admin/quotations/${id}/generate-pdf`),
+  getPDF: (id) => api.get(`/admin/quotations/${id}/pdf`),
+  sendQuotation: (id, data) => api.post(`/admin/quotations/${id}/send`, data),
+
+  // Quote Settings
+  getQuoteSettings: () => api.get('/admin/settings/quote'),
+  updateQuoteSettings: (data) => api.put('/admin/settings/quote', data),
+
+  // Store Settings
+  getStoreSettings: () => api.get('/admin/settings/store'),
+  updateStoreSettings: (formData) => api.put('/admin/settings/store', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  uploadLogo: (formData) => api.post('/admin/settings/store/logo', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteLogo: () => api.delete('/admin/settings/store/logo')
 };
 
 export default api;

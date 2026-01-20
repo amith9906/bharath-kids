@@ -10,26 +10,37 @@ export const useCart = () => {
   return context;
 };
 
-export const CartProvider = ({ children }) => {
-  const [items, setItems] = useState([]);
-
-  // Load cart from localStorage on mount
-  useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      try {
-        setItems(JSON.parse(savedCart));
-      } catch (error) {
-        console.error('Error loading cart:', error);
-        localStorage.removeItem('cart');
-      }
+// Initialize cart from localStorage
+const getInitialCart = () => {
+  if (typeof window === 'undefined') return [];
+  const savedCart = localStorage.getItem('cart');
+  if (savedCart) {
+    try {
+      return JSON.parse(savedCart);
+    } catch (error) {
+      console.error('Error loading cart:', error);
+      localStorage.removeItem('cart');
+      return [];
     }
+  }
+  return [];
+};
+
+export const CartProvider = ({ children }) => {
+  const [items, setItems] = useState(getInitialCart);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Mark as initialized after first render
+  useEffect(() => {
+    setIsInitialized(true);
   }, []);
 
-  // Save cart to localStorage whenever it changes
+  // Save cart to localStorage whenever it changes (but only after initialization)
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(items));
-  }, [items]);
+    if (isInitialized) {
+      localStorage.setItem('cart', JSON.stringify(items));
+    }
+  }, [items, isInitialized]);
 
   const addItem = (item) => {
     setItems((prev) => {
@@ -43,6 +54,19 @@ export const CartProvider = ({ children }) => {
         return updated;
       }
       return [...prev, { ...item, quantity: 1 }];
+    });
+  };
+
+  const decreaseItem = (itemId) => {
+    setItems((prev) => {
+      const item = prev.find((i) => i.id === itemId);
+      if (!item) return prev;
+      if (item.quantity <= 1) {
+        return prev.filter((i) => i.id !== itemId);
+      }
+      return prev.map((i) =>
+        i.id === itemId ? { ...i, quantity: i.quantity - 1 } : i
+      );
     });
   };
 
@@ -110,6 +134,7 @@ export const CartProvider = ({ children }) => {
   const value = {
     items,
     addItem,
+    decreaseItem,
     removeItem,
     updateQuantity,
     clearCart,

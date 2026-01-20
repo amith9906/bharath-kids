@@ -85,6 +85,49 @@ const Quotation = sequelize.define('Quotation', {
     type: DataTypes.TEXT,
     allowNull: true,
     field: 'admin_notes'
+  },
+  adminPriceAdjustment: {
+    type: DataTypes.DECIMAL(12, 2),
+    allowNull: true,
+    defaultValue: 0,
+    field: 'admin_price_adjustment'
+  },
+  adminGstAmount: {
+    type: DataTypes.DECIMAL(12, 2),
+    allowNull: true,
+    defaultValue: 0,
+    field: 'admin_gst_amount'
+  },
+  adminGstPercent: {
+    type: DataTypes.DECIMAL(5, 2),
+    allowNull: true,
+    defaultValue: 0,
+    field: 'admin_gst_percent'
+  },
+  finalTotal: {
+    type: DataTypes.DECIMAL(12, 2),
+    allowNull: true,
+    field: 'final_total'
+  },
+  pdfUrl: {
+    type: DataTypes.STRING(500),
+    allowNull: true,
+    field: 'pdf_url'
+  },
+  sentToCustomer: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    field: 'sent_to_customer'
+  },
+  sentAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    field: 'sent_at'
+  },
+  sentVia: {
+    type: DataTypes.ENUM('email', 'whatsapp', 'both'),
+    allowNull: true,
+    field: 'sent_via'
   }
 }, {
   tableName: 'quotations',

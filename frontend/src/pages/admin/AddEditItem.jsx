@@ -14,6 +14,7 @@ const AddEditItem = ({ item, onClose, onSave }) => {
     name: '',
     description: '',
     price: '',
+    brand: '',
     category: '',
     hsnCode: '',
     unit: 'piece',
@@ -21,6 +22,7 @@ const AddEditItem = ({ item, onClose, onSave }) => {
     igstRate: '0',
     cgstRate: '0',
     sgstRate: '0',
+    warranty: '',
     isActive: true
   });
   const [errors, setErrors] = useState({});
@@ -31,6 +33,7 @@ const AddEditItem = ({ item, onClose, onSave }) => {
         name: item.name || '',
         description: item.description || '',
         price: item.price?.toString() || '',
+        brand: item.brand || '',
         category: item.category || '',
         hsnCode: item.hsnCode || '',
         unit: item.unit || 'piece',
@@ -38,6 +41,7 @@ const AddEditItem = ({ item, onClose, onSave }) => {
         igstRate: item.igstRate?.toString() || '0',
         cgstRate: item.cgstRate?.toString() || '0',
         sgstRate: item.sgstRate?.toString() || '0',
+        warranty: item.warranty || '',
         isActive: item.isActive !== false
       });
       if (item.imageUrl) {
@@ -116,6 +120,7 @@ const AddEditItem = ({ item, onClose, onSave }) => {
       submitData.append('name', formData.name);
       submitData.append('description', formData.description);
       submitData.append('price', formData.price);
+      submitData.append('brand', formData.brand);
       submitData.append('category', formData.category);
       submitData.append('hsnCode', formData.hsnCode);
       submitData.append('unit', formData.unit);
@@ -123,6 +128,7 @@ const AddEditItem = ({ item, onClose, onSave }) => {
       submitData.append('igstRate', formData.igstRate);
       submitData.append('cgstRate', formData.cgstRate);
       submitData.append('sgstRate', formData.sgstRate);
+      submitData.append('warranty', formData.warranty);
       submitData.append('isActive', formData.isActive);
 
       if (imageFile) {
@@ -289,6 +295,20 @@ const AddEditItem = ({ item, onClose, onSave }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
+                Brand
+              </label>
+              <input
+                type="text"
+                name="brand"
+                value={formData.brand}
+                onChange={handleChange}
+                placeholder="e.g., Anchor, Legrand, Cona"
+                className="input"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t('admin.items.category')}
               </label>
               <input
@@ -296,6 +316,7 @@ const AddEditItem = ({ item, onClose, onSave }) => {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
+                placeholder="e.g., Switches, MCB, Cables"
                 className="input"
               />
             </div>
@@ -309,6 +330,20 @@ const AddEditItem = ({ item, onClose, onSave }) => {
                 name="hsnCode"
                 value={formData.hsnCode}
                 onChange={handleChange}
+                className="input"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Warranty
+              </label>
+              <input
+                type="text"
+                name="warranty"
+                value={formData.warranty}
+                onChange={handleChange}
+                placeholder="e.g., 1 Year, 2 Years, 6 Months"
                 className="input"
               />
             </div>

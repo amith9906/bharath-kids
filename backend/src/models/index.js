@@ -7,6 +7,8 @@ const Item = require('./Item');
 const Quotation = require('./Quotation');
 const QuotationItem = require('./QuotationItem');
 const QuotationStatusHistory = require('./QuotationStatusHistory');
+const QuoteSettings = require('./QuoteSettings');
+const StoreSettings = require('./StoreSettings');
 
 // Define associations
 
@@ -60,5 +62,7 @@ module.exports = {
   Quotation,
   QuotationItem,
   QuotationStatusHistory,
+  QuoteSettings,
+  StoreSettings,
   syncDatabase
 };

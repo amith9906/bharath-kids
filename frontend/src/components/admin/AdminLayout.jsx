@@ -8,7 +8,9 @@ import {
   FiMenu,
   FiX,
   FiLogOut,
-  FiHome
+  FiHome,
+  FiSettings,
+  FiShoppingBag
 } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import LanguageSwitcher from '../common/LanguageSwitcher';
@@ -28,7 +30,9 @@ const AdminLayout = () => {
   const menuItems = [
     { path: '/admin', icon: FiGrid, label: t('nav.dashboard'), exact: true },
     { path: '/admin/quotations', icon: FiFileText, label: t('nav.manageQuotations') },
-    { path: '/admin/items', icon: FiPackage, label: t('nav.manageItems') }
+    { path: '/admin/items', icon: FiPackage, label: t('nav.manageItems') },
+    { path: '/admin/settings/store', icon: FiShoppingBag, label: 'Store Settings' },
+    { path: '/admin/settings/quote', icon: FiSettings, label: 'Quote Settings' }
   ];
 
   const isActive = (path, exact = false) => {
@@ -103,24 +107,24 @@ const AdminLayout = () => {
       {/* Main content */}
       <div className="lg:ml-64">
         {/* Header */}
-        <header className="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+        <header className="bg-white shadow-sm h-14 sm:h-16 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg -ml-2"
           >
             <FiMenu className="w-5 h-5" />
           </button>
 
           <div className="flex-1" />
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <LanguageSwitcher />
-            <span className="text-sm text-gray-600">{user?.name}</span>
+            <span className="text-xs sm:text-sm text-gray-600 hidden xs:inline truncate max-w-[100px] sm:max-w-none">{user?.name}</span>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="p-6">
+        <main className="p-3 sm:p-6">
           <Outlet />
         </main>
       </div>

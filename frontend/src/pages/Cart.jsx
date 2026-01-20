@@ -35,23 +35,24 @@ const Cart = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">{t('cart.title')}</h1>
+        <div className="flex items-center justify-between mb-4 sm:mb-8">
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-900">{t('cart.title')}</h1>
           <button
             onClick={clearCart}
-            className="flex items-center gap-2 text-red-600 hover:text-red-700"
+            className="flex items-center gap-1 sm:gap-2 text-red-600 hover:text-red-700 text-sm sm:text-base"
           >
             <FiTrash2 className="w-4 h-4" />
-            {t('cart.clearCart')}
+            <span className="hidden xs:inline">{t('cart.clearCart')}</span>
+            <span className="xs:hidden">Clear</span>
           </button>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-6">
               {items.map((item) => (
                 <CartItem key={item.id} item={item} />
               ))}
@@ -60,7 +61,7 @@ const Cart = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 sticky top-20 sm:top-24">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 {t('checkout.orderSummary')}
               </h2>
@@ -88,14 +89,14 @@ const Cart = () => {
 
               <Link
                 to="/checkout"
-                className="btn btn-primary w-full mt-6"
+                className="btn btn-primary w-full mt-4 sm:mt-6 py-3 text-sm sm:text-base"
               >
                 {t('cart.proceedToCheckout')}
               </Link>
 
               <Link
                 to="/items"
-                className="btn btn-secondary w-full mt-3"
+                className="btn btn-secondary w-full mt-2 sm:mt-3 py-3 text-sm sm:text-base"
               >
                 {t('cart.continueShopping')}
               </Link>

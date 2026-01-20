@@ -103,8 +103,76 @@ Thank you for your business!
   }
 };
 
+// Send finalized quotation to customer via WhatsApp
+const sendQuotationToCustomer = async (quotation) => {
+  if (!client) {
+    console.log('WhatsApp not configured. Skipping quotation send.');
+    return;
+  }
+
+  const customerPhone = quotation.customerPhone;
+  if (!customerPhone) {
+    console.log('Customer phone not provided.');
+    return;
+  }
+
+  // Format phone number for WhatsApp
+  let formattedPhone = customerPhone.replace(/\s+/g, '').replace(/[^0-9+]/g, '');
+  if (!formattedPhone.startsWith('+')) {
+    // Assume Indian number if no country code
+    formattedPhone = '+91' + formattedPhone.replace(/^0+/, '');
+  }
+
+  const finalTotal = quotation.finalTotal || quotation.grandTotal;
+
+  const itemsList = quotation.items.slice(0, 5).map((item, idx) =>
+    `${idx + 1}. ${item.item?.brand ? `${item.item.brand} - ` : ''}${item.itemName} x${item.quantity} - ${formatCurrency(item.totalPrice)}`
+  ).join('\n');
+
+  const moreItemsText = quotation.items.length > 5 ? `\n... and ${quotation.items.length - 5} more items` : '';
+
+  const gstDisclaimer = (!quotation.taxTotal && !quotation.adminGstAmount)
+    ? '\n⚠️ *Note: This quotation does not include GST. GST will be charged as applicable.*'
+    : '';
+
+  const message = `
+📋 *Quotation #${quotation.quotationNumber}*
+
+Dear ${quotation.customerName},
+
+Here is your requested quotation:
+
+*Items:*
+${itemsList}${moreItemsText}
+
+━━━━━━━━━━━━━━━━
+Subtotal: ${formatCurrency(quotation.subtotal)}
+${parseFloat(quotation.discountTotal) > 0 ? `Discount: -${formatCurrency(quotation.discountTotal)}\n` : ''}${parseFloat(quotation.taxTotal) > 0 ? `Tax: ${formatCurrency(quotation.taxTotal)}\n` : ''}${quotation.adminPriceAdjustment && parseFloat(quotation.adminPriceAdjustment) !== 0 ? `Adjustment: ${parseFloat(quotation.adminPriceAdjustment) > 0 ? '+' : ''}${formatCurrency(quotation.adminPriceAdjustment)}\n` : ''}${quotation.adminGstAmount && parseFloat(quotation.adminGstAmount) > 0 ? `GST (${quotation.adminGstPercent}%): ${formatCurrency(quotation.adminGstAmount)}\n` : ''}━━━━━━━━━━━━━━━━
+*TOTAL: ${formatCurrency(finalTotal)}*
+${gstDisclaimer}
+
+${quotation.adminNotes ? `📝 ${quotation.adminNotes}\n` : ''}
+Valid for 15 days.
+
+Thank you for your interest! 🙏
+  `.trim();
+
+  try {
+    await client.messages.create({
+      body: message,
+      from: process.env.TWILIO_WHATSAPP_FROM,
+      to: `whatsapp:${formattedPhone}`
+    });
+    console.log('Quotation sent to customer via WhatsApp successfully.');
+  } catch (error) {
+    console.error('Error sending quotation via WhatsApp:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   initTwilioClient,
   sendQuotationNotification,
-  sendStatusUpdateToCustomer
+  sendStatusUpdateToCustomer,
+  sendQuotationToCustomer
 };

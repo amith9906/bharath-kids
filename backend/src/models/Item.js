@@ -29,6 +29,10 @@ const Item = sequelize.define('Item', {
     type: DataTypes.STRING(100),
     allowNull: true
   },
+  brand: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
   hsnCode: {
     type: DataTypes.STRING(20),
     allowNull: true,
@@ -62,6 +66,11 @@ const Item = sequelize.define('Item', {
     allowNull: true,
     defaultValue: 0,
     field: 'discount_percent'
+  },
+  warranty: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    defaultValue: null
   },
   isActive: {
     type: DataTypes.BOOLEAN,

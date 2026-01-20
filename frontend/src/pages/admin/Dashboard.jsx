@@ -79,33 +79,33 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">{t('admin.dashboard.title')}</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{t('admin.dashboard.title')}</h1>
 
       {/* Stats Cards */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {statCards.map((card, index) => (
-          <div key={index} className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">{card.title}</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{card.value}</p>
+          <div key={index} className="bg-white rounded-lg shadow-sm p-3 sm:p-6">
+            <div className="flex items-start sm:items-center justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-xs sm:text-sm text-gray-500 truncate">{card.title}</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 truncate">{card.value}</p>
                 {card.subtext && (
-                  <p className="text-xs text-gray-400 mt-1">{card.subtext}</p>
+                  <p className="text-xs text-gray-400 mt-1 truncate hidden sm:block">{card.subtext}</p>
                 )}
               </div>
-              <div className={`${card.color} p-3 rounded-lg`}>
-                <card.icon className="w-6 h-6 text-white" />
+              <div className={`${card.color} p-2 sm:p-3 rounded-lg flex-shrink-0`}>
+                <card.icon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Status Breakdown */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">
             {t('admin.dashboard.statusBreakdown')}
           </h2>
           <div className="space-y-3">
@@ -121,19 +121,46 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Quotations */}
-        <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">
+        <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900">
               {t('admin.dashboard.recentQuotations')}
             </h2>
             <Link
               to="/admin/quotations"
-              className="text-sm text-primary-600 hover:text-primary-700"
+              className="text-xs sm:text-sm text-primary-600 hover:text-primary-700"
             >
               View All
             </Link>
           </div>
-          <div className="overflow-x-auto">
+
+          {/* Mobile: Card View */}
+          <div className="sm:hidden space-y-3">
+            {recentQuotations?.slice(0, 5).map((quotation) => (
+              <Link
+                key={quotation.id}
+                to={`/admin/quotations/${quotation.id}`}
+                className="block bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <p className="font-medium text-primary-600 text-sm">{quotation.quotationNumber}</p>
+                    <p className="text-sm text-gray-900">{quotation.customerName}</p>
+                  </div>
+                  <span className={`badge badge-${quotation.status} text-xs`}>
+                    {t(`quotations.statuses.${quotation.status}`)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-xs text-gray-500">
+                  <span className="font-semibold text-gray-900">{formatCurrency(quotation.grandTotal)}</span>
+                  <span>{formatDate(quotation.createdAt)}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop: Table View */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="text-left text-xs text-gray-500 uppercase">

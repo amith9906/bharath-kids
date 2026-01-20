@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FiShoppingCart, FiUser, FiMenu, FiX, FiLogOut, FiSettings } from 'react-icons/fi';
+import { FiShoppingCart, FiMenu, FiX, FiLogOut, FiPhone } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
+import { useStore } from '../../contexts/StoreContext';
 import LanguageSwitcher from './LanguageSwitcher';
-
 const Navbar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, logout, isAdmin, isAuthenticated } = useAuth();
   const { itemCount } = useCart();
+  const store = useStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
@@ -19,13 +21,59 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
+  const logoUrl = store.getLogoUrl();
+
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
+      {/* Top bar with contact info */}
+      {(store.phone || store.whatsapp || store.email) && (
+        <div className="bg-primary-600 text-white text-xs sm:text-sm py-1.5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-center sm:justify-between items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-3 sm:gap-6">
+              {store.phone && (
+                <a href={`tel:${store.phone}`} className="flex items-center gap-1 hover:text-primary-100">
+                  <FiPhone className="w-3 h-3" />
+                  <span className="hidden xs:inline">{store.phone}</span>
+                </a>
+              )}
+              {store.whatsapp && (
+                <a
+                  href={`https://wa.me/${store.whatsapp.replace(/[^0-9]/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 hover:text-primary-100"
+                >
+                  <FaWhatsapp className="w-3 h-3" />
+                  <span className="hidden xs:inline">WhatsApp</span>
+                </a>
+              )}
+            </div>
+            {store.workingHours && (
+              <span className="hidden sm:block text-primary-100">{store.workingHours}</span>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold text-primary-600">{t('common.appName')}</span>
+          <Link to="/" className="flex items-center gap-2">
+            {logoUrl ? (
+              <img
+                src={logoUrl}
+                alt={store.storeName}
+                className="h-10 w-auto object-contain"
+              />
+            ) : null}
+            <div className="flex flex-col">
+              <span className="text-xl sm:text-2xl font-bold text-primary-600 leading-tight">
+                {store.storeName || t('common.appName')}
+              </span>
+              {store.tagline && (
+                <span className="text-xs text-gray-500 hidden sm:block">{store.tagline}</span>
+              )}
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

@@ -9,7 +9,7 @@ const { deleteFile, uploadDir } = require('../middleware/upload');
 // Get all active items (public)
 const getItems = async (req, res) => {
   try {
-    const { category, search, page = 1, limit = 20 } = req.query;
+    const { category, brand, search, page = 1, limit = 20 } = req.query;
     const offset = (page - 1) * limit;
 
     const where = { isActive: true };
@@ -18,10 +18,15 @@ const getItems = async (req, res) => {
       where.category = category;
     }
 
+    if (brand) {
+      where.brand = brand;
+    }
+
     if (search) {
       where[Op.or] = [
         { name: { [Op.iLike]: `%${search}%` } },
-        { description: { [Op.iLike]: `%${search}%` } }
+        { description: { [Op.iLike]: `%${search}%` } },
+        { brand: { [Op.iLike]: `%${search}%` } }
       ];
     }
 
@@ -84,16 +89,39 @@ const getCategories = async (req, res) => {
   }
 };
 
+// Get brands (public)
+const getBrands = async (req, res) => {
+  try {
+    const brands = await Item.findAll({
+      attributes: ['brand'],
+      where: { isActive: true, brand: { [Op.ne]: null } },
+      group: ['brand'],
+      order: [['brand', 'ASC']]
+    });
+
+    res.json({
+      brands: brands.map(b => b.brand).filter(Boolean)
+    });
+  } catch (error) {
+    console.error('Get brands error:', error);
+    res.status(500).json({ message: 'Server error while fetching brands.' });
+  }
+};
+
 // Admin: Get all items (including inactive)
 const adminGetItems = async (req, res) => {
   try {
-    const { category, search, isActive, page = 1, limit = 20 } = req.query;
+    const { category, brand, search, isActive, page = 1, limit = 20 } = req.query;
     const offset = (page - 1) * limit;
 
     const where = {};
 
     if (category) {
       where.category = category;
+    }
+
+    if (brand) {
+      where.brand = brand;
     }
 
     if (isActive !== undefined) {
@@ -104,7 +132,8 @@ const adminGetItems = async (req, res) => {
       where[Op.or] = [
         { name: { [Op.iLike]: `%${search}%` } },
         { description: { [Op.iLike]: `%${search}%` } },
-        { hsnCode: { [Op.iLike]: `%${search}%` } }
+        { hsnCode: { [Op.iLike]: `%${search}%` } },
+        { brand: { [Op.iLike]: `%${search}%` } }
       ];
     }
 
@@ -143,6 +172,7 @@ const createItem = async (req, res) => {
       description,
       price,
       category,
+      brand,
       hsnCode,
       unit,
       igstRate,
@@ -163,6 +193,7 @@ const createItem = async (req, res) => {
       price,
       imageUrl,
       category,
+      brand,
       hsnCode,
       unit,
       igstRate: igstRate || 0,
@@ -205,6 +236,7 @@ const updateItem = async (req, res) => {
       description,
       price,
       category,
+      brand,
       hsnCode,
       unit,
       igstRate,
@@ -243,6 +275,7 @@ const updateItem = async (req, res) => {
       price: price !== undefined ? price : item.price,
       imageUrl: imageUrl,
       category: category !== undefined ? category : item.category,
+      brand: brand !== undefined ? brand : item.brand,
       hsnCode: hsnCode !== undefined ? hsnCode : item.hsnCode,
       unit: unit !== undefined ? unit : item.unit,
       igstRate: igstRate !== undefined ? igstRate : item.igstRate,
@@ -312,7 +345,8 @@ const downloadTemplate = async (req, res) => {
         'Name*': 'Sample Product',
         'Description': 'Product description',
         'Price*': 1000,
-        'Category': 'Electronics',
+        'Brand': 'Anchor',
+        'Category': 'Switches',
         'HSN Code': '8471',
         'Unit': 'piece',
         'Discount %': 10,
@@ -324,7 +358,8 @@ const downloadTemplate = async (req, res) => {
         'Name*': 'Another Product',
         'Description': 'Another description',
         'Price*': 500,
-        'Category': 'Accessories',
+        'Brand': 'Legrand',
+        'Category': 'Switches',
         'HSN Code': '8473',
         'Unit': 'piece',
         'Discount %': 5,
@@ -341,6 +376,7 @@ const downloadTemplate = async (req, res) => {
       { wch: 25 }, // Name
       { wch: 40 }, // Description
       { wch: 12 }, // Price
+      { wch: 15 }, // Brand
       { wch: 15 }, // Category
       { wch: 12 }, // HSN Code
       { wch: 10 }, // Unit
@@ -411,6 +447,7 @@ const bulkUpload = async (req, res) => {
           name: name.toString().trim(),
           description: row['Description'] ? row['Description'].toString().trim() : null,
           price: price,
+          brand: row['Brand'] ? row['Brand'].toString().trim() : null,
           category: row['Category'] ? row['Category'].toString().trim() : null,
           hsnCode: row['HSN Code'] ? row['HSN Code'].toString().trim() : null,
           unit: row['Unit'] ? row['Unit'].toString().trim().toLowerCase() : 'piece',
@@ -442,6 +479,7 @@ module.exports = {
   getItems,
   getItem,
   getCategories,
+  getBrands,
   adminGetItems,
   createItem,
   updateItem,

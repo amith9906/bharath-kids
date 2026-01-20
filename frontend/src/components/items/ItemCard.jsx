@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FiShoppingCart, FiCheck, FiZoomIn } from 'react-icons/fi';
+import { FiShoppingCart, FiZoomIn, FiPlus, FiMinus, FiTrash2, FiCheck } from 'react-icons/fi';
+import { TbArrowsExchange } from 'react-icons/tb';
 import { useCart } from '../../contexts/CartContext';
+import { useCompare } from '../../contexts/CompareContext';
 import { getImageUrl } from '../../services/api';
 import ImageZoom from '../common/ImageZoom';
 
@@ -15,13 +17,34 @@ const formatCurrency = (amount) => {
 
 const ItemCard = ({ item }) => {
   const { t } = useTranslation();
-  const { addItem, getItemQuantity } = useCart();
+  const { addItem, decreaseItem, removeItem, getItemQuantity } = useCart();
+  const { addToCompare, removeFromCompare, isInCompare, canAddMore } = useCompare();
   const [showZoom, setShowZoom] = useState(false);
   const quantityInCart = getItemQuantity(item.id);
+  const inCompare = isInCompare(item.id);
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
     addItem(item);
+  };
+
+  const handleDecrease = (e) => {
+    e.stopPropagation();
+    decreaseItem(item.id);
+  };
+
+  const handleRemove = (e) => {
+    e.stopPropagation();
+    removeItem(item.id);
+  };
+
+  const handleCompareToggle = (e) => {
+    e.stopPropagation();
+    if (inCompare) {
+      removeFromCompare(item.id);
+    } else if (canAddMore()) {
+      addToCompare(item);
+    }
   };
 
   const handleImageClick = () => {
@@ -79,15 +102,39 @@ const ItemCard = ({ item }) => {
               -{item.discountPercent}%
             </div>
           )}
+
+          {/* Compare button on image */}
+          <button
+            onClick={handleCompareToggle}
+            disabled={!inCompare && !canAddMore()}
+            className={`absolute top-2 right-2 p-2 rounded-full transition-all shadow-sm ${
+              inCompare
+                ? 'bg-primary-600 text-white'
+                : canAddMore()
+                ? 'bg-white text-gray-600 hover:bg-primary-50 hover:text-primary-600'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            }`}
+            title={inCompare ? 'Remove from compare' : canAddMore() ? 'Add to compare' : 'Compare limit reached'}
+          >
+            {inCompare ? <FiCheck className="w-4 h-4" /> : <TbArrowsExchange className="w-4 h-4" />}
+          </button>
         </div>
 
         {/* Content */}
         <div className="flex flex-col flex-1 space-y-1.5 sm:space-y-2">
-          {item.category && (
-            <span className="text-xs text-primary-600 font-medium uppercase tracking-wide">
-              {item.category}
-            </span>
-          )}
+          {/* Brand & Category */}
+          <div className="flex items-center gap-2 flex-wrap">
+            {item.brand && (
+              <span className="text-xs font-semibold text-primary-700 bg-primary-50 px-2 py-0.5 rounded">
+                {item.brand}
+              </span>
+            )}
+            {item.category && (
+              <span className="text-xs text-gray-500 uppercase tracking-wide">
+                {item.category}
+              </span>
+            )}
+          </div>
 
           <h3 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2 leading-tight">
             {item.name}
@@ -115,33 +162,50 @@ const ItemCard = ({ item }) => {
                 GST: {item.igstRate > 0 ? item.igstRate : (parseFloat(item.cgstRate) + parseFloat(item.sgstRate))}%
               </span>
             )}
+            {item.warranty && (
+              <span className="badge bg-purple-100 text-purple-800 text-xs">
+                Warranty: {item.warranty}
+              </span>
+            )}
           </div>
 
           {/* Add to Cart Button */}
-          <button
-            onClick={handleAddToCart}
-            className={`w-full mt-auto flex items-center justify-center gap-2 py-3 sm:py-2.5 px-4 rounded-lg font-medium transition-all text-sm sm:text-base ${
-              quantityInCart > 0
-                ? 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800'
-                : 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800'
-            }`}
-          >
-            {quantityInCart > 0 ? (
-              <>
-                <FiCheck className="w-5 h-5" />
-                <span className="hidden xs:inline">{t('items.addedToCart')}</span>
-                <span className="xs:hidden">Added</span>
-                <span className="bg-white/20 px-2 py-0.5 rounded text-sm">
+          {quantityInCart > 0 ? (
+            <div className="mt-auto flex items-center gap-2">
+              <div className="flex items-center bg-gray-100 rounded-lg">
+                <button
+                  onClick={handleDecrease}
+                  className="p-2.5 sm:p-2 text-gray-600 hover:text-red-600 hover:bg-gray-200 rounded-l-lg transition-colors"
+                >
+                  {quantityInCart === 1 ? <FiTrash2 className="w-5 h-5" /> : <FiMinus className="w-5 h-5" />}
+                </button>
+                <span className="px-4 py-2 font-semibold text-gray-900 min-w-[3rem] text-center">
                   {quantityInCart}
                 </span>
-              </>
-            ) : (
-              <>
-                <FiShoppingCart className="w-5 h-5" />
-                {t('items.addToCart')}
-              </>
-            )}
-          </button>
+                <button
+                  onClick={handleAddToCart}
+                  className="p-2.5 sm:p-2 text-gray-600 hover:text-green-600 hover:bg-gray-200 rounded-r-lg transition-colors"
+                >
+                  <FiPlus className="w-5 h-5" />
+                </button>
+              </div>
+              <button
+                onClick={handleRemove}
+                className="p-2.5 sm:p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                title="Remove from cart"
+              >
+                <FiTrash2 className="w-5 h-5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleAddToCart}
+              className="w-full mt-auto flex items-center justify-center gap-2 py-3 sm:py-2.5 px-4 rounded-lg font-medium transition-all text-sm sm:text-base bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800"
+            >
+              <FiShoppingCart className="w-5 h-5" />
+              {t('items.addToCart')}
+            </button>
+          )}
         </div>
       </div>
 

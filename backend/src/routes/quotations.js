@@ -5,7 +5,8 @@ const { auth, optionalAuth } = require('../middleware/auth');
 const {
   createQuotation,
   getMyQuotations,
-  getQuotation
+  getQuotation,
+  downloadPDF
 } = require('../controllers/quotationController');
 
 // Validation rules
@@ -22,5 +23,6 @@ const createQuotationValidation = [
 router.post('/', optionalAuth, createQuotationValidation, createQuotation);
 router.get('/my', auth, getMyQuotations);
 router.get('/:id', optionalAuth, getQuotation);
+router.get('/:id/pdf', optionalAuth, downloadPDF);
 
 module.exports = router;

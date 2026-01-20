@@ -13,6 +13,7 @@ const authRoutes = require('./routes/auth');
 const itemRoutes = require('./routes/items');
 const quotationRoutes = require('./routes/quotations');
 const adminRoutes = require('./routes/admin');
+const settingsRoutes = require('./routes/settings');
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/quotations', quotationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

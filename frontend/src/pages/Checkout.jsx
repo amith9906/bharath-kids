@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiCheck, FiArrowLeft } from 'react-icons/fi';
+import { FiCheck, FiArrowLeft, FiDownload, FiLoader } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { quotationsAPI } from '../services/api';
+
+const API_BASE_URL = import.meta.env.VITE_BASE_URL || '';
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-IN', {
@@ -33,6 +35,7 @@ const Checkout = () => {
   const [submitted, setSubmitted] = useState(false);
   const [quotation, setQuotation] = useState(null);
   const [errors, setErrors] = useState({});
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -92,6 +95,26 @@ const Checkout = () => {
     }
   };
 
+  const handleDownloadPDF = async () => {
+    if (!quotation) return;
+
+    setDownloadingPDF(true);
+    try {
+      const response = await quotationsAPI.downloadPDF(quotation.id);
+      const pdfUrl = response.data.pdfUrl;
+
+      // Open PDF in new tab or download
+      const fullUrl = `${API_BASE_URL}${pdfUrl}`;
+      window.open(fullUrl, '_blank');
+      toast.success('PDF downloaded successfully');
+    } catch (error) {
+      console.error('PDF download error:', error);
+      toast.error('Failed to download PDF');
+    } finally {
+      setDownloadingPDF(false);
+    }
+  };
+
   if (items.length === 0 && !submitted) {
     navigate('/cart');
     return null;
@@ -123,8 +146,28 @@ const Checkout = () => {
                 {formatCurrency(quotation.grandTotal)}
               </p>
             </div>
+
+            {/* Download PDF Button */}
+            <button
+              onClick={handleDownloadPDF}
+              disabled={downloadingPDF}
+              className="btn btn-primary w-full mb-6 py-3 flex items-center justify-center gap-2"
+            >
+              {downloadingPDF ? (
+                <>
+                  <FiLoader className="w-5 h-5 animate-spin" />
+                  Generating PDF...
+                </>
+              ) : (
+                <>
+                  <FiDownload className="w-5 h-5" />
+                  Download Quotation PDF
+                </>
+              )}
+            </button>
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/" className="btn btn-primary">
+              <Link to="/" className="btn btn-secondary">
                 {t('checkout.backToHome')}
               </Link>
               <Link to="/items" className="btn btn-secondary">
@@ -138,23 +181,23 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link
           to="/cart"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 sm:mb-6 text-sm sm:text-base"
         >
           <FiArrowLeft className="w-4 h-4" />
           {t('common.back')}
         </Link>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">{t('checkout.title')}</h1>
+        <h1 className="text-xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-8">{t('checkout.title')}</h1>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-8">
           {/* Customer Details Form */}
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">
+            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6">
                 {t('checkout.customerDetails')}
               </h2>
 
@@ -256,7 +299,7 @@ const Checkout = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn btn-primary w-full mt-6"
+                className="btn btn-primary w-full mt-4 sm:mt-6 py-3 text-sm sm:text-base"
               >
                 {loading ? t('checkout.submitting') : t('checkout.submitQuotation')}
               </button>
@@ -264,8 +307,8 @@ const Checkout = () => {
           </div>
 
           {/* Order Summary */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+          <div className="lg:col-span-1 order-first lg:order-last">
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 sticky top-20 sm:top-24">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 {t('checkout.orderSummary')}
               </h2>
