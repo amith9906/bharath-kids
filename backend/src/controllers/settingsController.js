@@ -45,6 +45,9 @@ const updateStoreSettings = async (req, res) => {
       instagram,
       workingHours,
       aboutText,
+      mission,
+      vision,
+      aboutWebsite,
       footerText,
       primaryColor
     } = req.body;
@@ -70,6 +73,9 @@ const updateStoreSettings = async (req, res) => {
       instagram,
       workingHours,
       aboutText,
+      mission,
+      vision,
+      aboutWebsite,
       footerText,
       primaryColor
     };
@@ -83,7 +89,7 @@ const updateStoreSettings = async (req, res) => {
           fs.unlinkSync(oldLogoPath);
         }
       }
-      updateData.logoUrl = `/uploads/items/${req.file.filename}`;
+      updateData.logoUrl = `/uploads/store/${req.file.filename}`;
     }
 
     if (!settings) {
@@ -119,7 +125,7 @@ const uploadLogo = async (req, res) => {
       }
     }
 
-    const logoUrl = `/uploads/items/${req.file.filename}`;
+    const logoUrl = `/uploads/store/${req.file.filename}`;
 
     if (!settings) {
       settings = await StoreSettings.create({ logoUrl });

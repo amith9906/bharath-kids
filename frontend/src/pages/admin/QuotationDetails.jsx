@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams, Link } from 'react-router-dom';
 import { FiArrowLeft, FiMail, FiPhone, FiMapPin, FiEdit2, FiSave, FiX, FiDownload, FiSend, FiTrash2, FiPlus } from 'react-icons/fi';
 import { FaWhatsapp, FaBuilding } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+import { useNotification } from '../../contexts/NotificationContext';
 import { adminAPI, getImageUrl } from '../../services/api';
 
 const formatCurrency = (amount) => {
@@ -53,6 +53,7 @@ const QuotationDetails = () => {
   const [sending, setSending] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
 
+  const { showNotification } = useNotification();
   useEffect(() => {
     fetchQuotation();
   }, [id]);
@@ -89,7 +90,7 @@ const QuotationDetails = () => {
 
   const handleStatusUpdate = async () => {
     if (newStatus === quotation.status) {
-      toast.info('Status is the same');
+      showNotification('Status is the same', 'info');
       return;
     }
 
@@ -99,12 +100,12 @@ const QuotationDetails = () => {
         status: newStatus,
         notes: statusNotes
       });
-      toast.success(t('admin.quotations.statusUpdated'));
+      showNotification(t('admin.quotations.statusUpdated'), 'success');
       fetchQuotation();
       setStatusNotes('');
     } catch (error) {
       console.error('Error updating status:', error);
-      toast.error('Failed to update status');
+      showNotification('Failed to update status', 'error');
     } finally {
       setUpdating(false);
     }

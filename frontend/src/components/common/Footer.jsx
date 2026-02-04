@@ -13,7 +13,7 @@ const Footer = () => {
   const fullAddress = store.getFullAddress();
 
   return (
-    <footer className="bg-gray-800 text-white mt-auto">
+    <footer className="bg-gray-800 text-white mt-auto" style={{ '--primary-color': store.primaryColor }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Store Info */}
@@ -26,7 +26,7 @@ const Footer = () => {
                   className="h-10 w-auto object-contain bg-white rounded p-1"
                 />
               )}
-              <h3 className="text-xl font-bold">{store.storeName || t('common.appName')}</h3>
+              <h3 className="text-xl font-bold" style={{ color: 'var(--primary-color)' }}>{store.storeName || t('common.appName')}</h3>
             </div>
             {store.tagline && (
               <p className="text-gray-400 text-sm">{store.tagline}</p>
@@ -116,13 +116,13 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold">Quick Links</h4>
             <div className="space-y-2">
-              <Link to="/" className="block text-gray-400 hover:text-white text-sm">
+              <Link to="/" className="block text-gray-400 hover:text-white text-sm" style={{ color: 'var(--primary-color)' }}>
                 {t('nav.home')}
               </Link>
-              <Link to="/items" className="block text-gray-400 hover:text-white text-sm">
+              <Link to="/items" className="block text-gray-400 hover:text-white text-sm" style={{ color: 'var(--primary-color)' }}>
                 {t('nav.items')}
               </Link>
-              <Link to="/cart" className="block text-gray-400 hover:text-white text-sm">
+              <Link to="/cart" className="block text-gray-400 hover:text-white text-sm" style={{ color: 'var(--primary-color)' }}>
                 {t('nav.cart')}
               </Link>
             </div>
@@ -138,6 +138,7 @@ const Footer = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-400 hover:text-blue-500 transition-colors"
+                      style={{ color: 'var(--primary-color)' }}
                     >
                       <FaFacebook className="w-6 h-6" />
                     </a>
@@ -148,6 +149,7 @@ const Footer = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-400 hover:text-pink-500 transition-colors"
+                      style={{ color: 'var(--primary-color)' }}
                     >
                       <FaInstagram className="w-6 h-6" />
                     </a>
@@ -158,6 +160,7 @@ const Footer = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-400 hover:text-green-400 transition-colors"
+                      style={{ color: 'var(--primary-color)' }}
                     >
                       <FaWhatsapp className="w-6 h-6" />
                     </a>

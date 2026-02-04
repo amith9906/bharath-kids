@@ -1,3 +1,34 @@
+// Send WhatsApp notification for course registration
+const { Course } = require('../models/Course');
+const User = require('../models/User');
+const sendCourseRegistrationNotification = async ({ userId, courseId }) => {
+  if (!client || !process.env.ADMIN_WHATSAPP_NUMBER) return;
+  try {
+    // Fetch user and course details
+    const user = await User.findByPk(userId);
+    const course = await Course.findByPk(courseId);
+    if (!user || !course) return;
+    const hasDiscount = course.discountPercent > 0;
+    const message = `New Course Registration:\n\nUser: ${user.name} (${user.email})\nCourse: ${course.title}\nPrice: ₹${course.price}${hasDiscount ? `\nDiscount: ${course.discountPercent}%\nFinal Fee: ₹${course.finalFee}` : ''}`;
+    await client.messages.create({
+      body: message,
+      from: process.env.TWILIO_WHATSAPP_FROM,
+      to: process.env.ADMIN_WHATSAPP_NUMBER
+    });
+  } catch (error) {
+    console.error('Error sending course registration WhatsApp:', error);
+  }
+};
+
+// General API to send WhatsApp message
+const sendCustomWhatsAppMessage = async (to, message) => {
+  if (!client) throw new Error('Twilio not configured');
+  await client.messages.create({
+    body: message,
+    from: process.env.TWILIO_WHATSAPP_FROM,
+    to
+  });
+};
 const twilio = require('twilio');
 require('dotenv').config();
 
@@ -174,5 +205,7 @@ module.exports = {
   initTwilioClient,
   sendQuotationNotification,
   sendStatusUpdateToCustomer,
-  sendQuotationToCustomer
+  sendQuotationToCustomer,
+  sendCourseRegistrationNotification,
+  sendCustomWhatsAppMessage
 };

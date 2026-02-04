@@ -102,10 +102,12 @@ export const CartProvider = ({ children }) => {
     let taxTotal = 0;
 
     items.forEach((item) => {
-      const itemSubtotal = parseFloat(item.price) * item.quantity;
+      const hasDiscount = parseFloat(item.discountPercent) > 0;
+      const itemPrice = hasDiscount && item.finalFee ? parseFloat(item.finalFee) : parseFloat(item.price);
+      const itemSubtotal = itemPrice * item.quantity;
       const discountPercent = parseFloat(item.discountPercent) || 0;
-      const discountAmount = (itemSubtotal * discountPercent) / 100;
-      const taxableAmount = itemSubtotal - discountAmount;
+      const discountAmount = hasDiscount ? (parseFloat(item.price) - itemPrice) * item.quantity : 0;
+      const taxableAmount = itemSubtotal;
 
       const igstRate = parseFloat(item.igstRate) || 0;
       const cgstRate = parseFloat(item.cgstRate) || 0;
@@ -113,7 +115,7 @@ export const CartProvider = ({ children }) => {
 
       const itemTax = (taxableAmount * (igstRate + cgstRate + sgstRate)) / 100;
 
-      subtotal += itemSubtotal;
+      subtotal += itemPrice * item.quantity;
       discountTotal += discountAmount;
       taxTotal += itemTax;
     });

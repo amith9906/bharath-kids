@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { useNotification } from '../contexts/NotificationContext';
 import { useAuth } from '../contexts/AuthContext';
 
 const Register = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { showNotification } = useNotification();
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
+    city: '',
+    state: '',
     password: '',
     confirmPassword: ''
   });
@@ -59,13 +62,15 @@ const Register = () => {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
+        city: formData.city,
+        state: formData.state,
         password: formData.password
       });
-      toast.success(t('auth.registerSuccess'));
+      showNotification(t('auth.registerSuccess'), 'success');
       navigate('/');
     } catch (error) {
       console.error('Registration error:', error);
-      toast.error(error.response?.data?.message || t('auth.registerError'));
+      showNotification(error.response?.data?.message || t('auth.registerError'), 'error');
     } finally {
       setLoading(false);
     }
@@ -123,6 +128,36 @@ const Register = () => {
                 onChange={handleChange}
                 className="input"
               />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  City
+                </label>
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  className="input"
+                  placeholder="Your city"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  State
+                </label>
+                <input
+                  type="text"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleChange}
+                  className="input"
+                  placeholder="Your state"
+                />
+              </div>
             </div>
 
             <div>

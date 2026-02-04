@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FiSearch, FiFilter, FiX } from 'react-icons/fi';
 import { TbArrowsExchange } from 'react-icons/tb';
-import { itemsAPI, getImageUrl } from '../services/api';
+import { coursesAPI, getImageUrl } from '../services/api';
 import { useCompare } from '../contexts/CompareContext';
 import ItemCard from '../components/items/ItemCard';
 
@@ -27,16 +27,14 @@ const Items = () => {
 
   useEffect(() => {
     fetchItems();
-  }, [search, selectedCategory, selectedBrand, page]);
+  }, [search, selectedCategory, page]);
 
   const fetchFilters = async () => {
     try {
-      const [categoriesRes, brandsRes] = await Promise.all([
-        itemsAPI.getCategories(),
-        itemsAPI.getBrands()
-      ]);
+      const categoriesRes = await coursesAPI.getCategories();
       setCategories(categoriesRes.data.categories || []);
-      setBrands(brandsRes.data.brands || []);
+      // No brands for courses, so setBrands([])
+      setBrands([]);
     } catch (error) {
       console.error('Error fetching filters:', error);
     }
@@ -48,13 +46,13 @@ const Items = () => {
       const params = { page, limit: 12 };
       if (search) params.search = search;
       if (selectedCategory) params.category = selectedCategory;
-      if (selectedBrand) params.brand = selectedBrand;
+      // No brand filter for courses
 
-      const response = await itemsAPI.getItems(params);
-      setItems(response.data.items);
+      const response = await coursesAPI.getCourses(params);
+      setItems(response.data.courses);
       setPagination(response.data.pagination);
     } catch (error) {
-      console.error('Error fetching items:', error);
+      console.error('Error fetching courses:', error);
     } finally {
       setLoading(false);
     }
@@ -116,8 +114,8 @@ const Items = () => {
 
             {/* Filter Dropdowns */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              {/* Brand Filter */}
-              <select
+              {/* Brand Filter (hidden for courses) */}
+              {/* <select
                 value={selectedBrand}
                 onChange={(e) => {
                   setSelectedBrand(e.target.value);
@@ -131,7 +129,7 @@ const Items = () => {
                     {brand}
                   </option>
                 ))}
-              </select>
+              </select> */}
 
               {/* Category Filter */}
               <select
@@ -166,14 +164,7 @@ const Items = () => {
           {/* Active Filters Pills */}
           {hasActiveFilters && (
             <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t">
-              {selectedBrand && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">
-                  Brand: {selectedBrand}
-                  <button onClick={() => setSelectedBrand('')}>
-                    <FiX className="w-3 h-3" />
-                  </button>
-                </span>
-              )}
+              {/* Brand pill hidden for courses */}
               {selectedCategory && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">
                   Category: {selectedCategory}

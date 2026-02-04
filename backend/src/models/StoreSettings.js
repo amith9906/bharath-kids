@@ -93,6 +93,19 @@ const StoreSettings = sequelize.define('StoreSettings', {
     allowNull: true,
     field: 'about_text'
   },
+  mission: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  vision: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  aboutWebsite: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'about_website'
+  },
   footerText: {
     type: DataTypes.TEXT,
     allowNull: true,

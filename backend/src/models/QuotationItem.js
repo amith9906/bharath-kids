@@ -16,24 +16,24 @@ const QuotationItem = sequelize.define('QuotationItem', {
       key: 'id'
     }
   },
-  itemId: {
+  courseId: {
     type: DataTypes.INTEGER,
     allowNull: true,
-    field: 'item_id',
+    field: 'course_id',
     references: {
-      model: 'items',
+      model: 'courses',
       key: 'id'
     }
   },
-  itemName: {
+  courseTitle: {
     type: DataTypes.STRING(255),
     allowNull: false,
-    field: 'item_name'
+    field: 'course_title'
   },
-  itemDescription: {
+  courseDescription: {
     type: DataTypes.TEXT,
     allowNull: true,
-    field: 'item_description'
+    field: 'course_description'
   },
   hsnCode: {
     type: DataTypes.STRING(20),

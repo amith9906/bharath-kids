@@ -51,12 +51,13 @@ export const authAPI = {
   changePassword: (data) => api.put('/auth/change-password', data)
 };
 
-// Items APIs
-export const itemsAPI = {
-  getItems: (params) => api.get('/items', { params }),
-  getItem: (id) => api.get(`/items/${id}`),
-  getCategories: () => api.get('/items/categories'),
-  getBrands: () => api.get('/items/brands')
+
+// Courses APIs
+export const coursesAPI = {
+  getCourses: (params) => api.get('/courses', { params }),
+  getCourse: (id) => api.get(`/courses/${id}`),
+  getCategories: () => api.get('/courses/categories'),
+  getMyCourses: () => api.get('/courses/my')
 };
 
 // Quotations APIs
@@ -72,26 +73,21 @@ export const settingsAPI = {
   getStoreSettings: () => api.get('/settings/store')
 };
 
+
 // Admin APIs
 export const adminAPI = {
   getDashboard: () => api.get('/admin/dashboard'),
 
-  // Items
-  getItems: (params) => api.get('/admin/items', { params }),
-  createItem: (formData) => api.post('/admin/items', formData, {
+  // Courses
+  getCourses: (params) => api.get('/admin/courses', { params }),
+  createCourse: (formData) => api.post('/admin/courses', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
-  updateItem: (id, formData) => api.put(`/admin/items/${id}`, formData, {
+  updateCourse: (id, formData) => api.put(`/admin/courses/${id}`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
-  deleteItem: (id) => api.delete(`/admin/items/${id}`),
-  uploadImage: (formData) => api.post('/admin/items/upload-image', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
-  downloadTemplate: () => api.get('/admin/items/template', { responseType: 'blob' }),
-  bulkUpload: (formData) => api.post('/admin/items/bulk-upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
+  deleteCourse: (id) => api.delete(`/admin/courses/${id}`),
+  getCategories: () => api.get('/courses/categories'),
 
   // Quotations
   getQuotations: (params) => api.get('/admin/quotations', { params }),

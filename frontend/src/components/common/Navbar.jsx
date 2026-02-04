@@ -24,10 +24,10 @@ const Navbar = () => {
   const logoUrl = store.getLogoUrl();
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="bg-white shadow-md sticky top-0 z-50" style={{ '--primary-color': store.primaryColor }}>
       {/* Top bar with contact info */}
       {(store.phone || store.whatsapp || store.email) && (
-        <div className="bg-primary-600 text-white text-xs sm:text-sm py-1.5">
+        <div className="text-white text-xs sm:text-sm py-1.5" style={{ backgroundColor: 'var(--primary-color)' }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-center sm:justify-between items-center gap-2 sm:gap-4">
             <div className="flex items-center gap-3 sm:gap-6">
               {store.phone && (
@@ -67,7 +67,7 @@ const Navbar = () => {
               />
             ) : null}
             <div className="flex flex-col">
-              <span className="text-xl sm:text-2xl font-bold text-primary-600 leading-tight">
+              <span className="text-xl sm:text-2xl font-bold leading-tight" style={{ color: 'var(--primary-color)' }}>
                 {store.storeName || t('common.appName')}
               </span>
               {store.tagline && (
@@ -82,13 +82,19 @@ const Navbar = () => {
               to="/"
               className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium"
             >
-              {t('nav.home')}
+              Home
+            </Link>
+            <Link
+              to="/about"
+              className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              About
             </Link>
             <Link
               to="/items"
               className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium"
             >
-              {t('nav.items')}
+              Courses
             </Link>
 
             {isAuthenticated && !isAdmin && (
@@ -189,14 +195,21 @@ const Navbar = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-gray-700 hover:text-primary-600 px-3 py-2 text-sm font-medium"
               >
-                {t('nav.home')}
+                Home
+              </Link>
+              <Link
+                to="/about"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-gray-700 hover:text-primary-600 px-3 py-2 text-sm font-medium"
+              >
+                About
               </Link>
               <Link
                 to="/items"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-gray-700 hover:text-primary-600 px-3 py-2 text-sm font-medium"
               >
-                {t('nav.items')}
+                Courses
               </Link>
 
               {isAuthenticated && !isAdmin && (

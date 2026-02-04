@@ -2,16 +2,13 @@ const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
 const { adminAuth } = require('../middleware/auth');
-const { uploadItemImage, uploadExcel } = require('../middleware/upload');
+const { uploadCourseImage, uploadExcel, uploadStoreImage } = require('../middleware/upload');
 const {
-  adminGetItems,
-  createItem,
-  updateItem,
-  deleteItem,
-  uploadImage,
-  downloadTemplate,
-  bulkUpload
-} = require('../controllers/itemController');
+  adminGetCourses,
+  createCourse,
+  updateCourse,
+  deleteCourse
+} = require('../controllers/courseController');
 const {
   adminGetQuotations,
   getQuotation,
@@ -37,18 +34,11 @@ router.use(adminAuth);
 // Dashboard
 router.get('/dashboard', getDashboardStats);
 
-// Items management
-router.get('/items', adminGetItems);
-router.post('/items', uploadItemImage.single('image'), createItem);
-router.put('/items/:id', uploadItemImage.single('image'), updateItem);
-router.delete('/items/:id', deleteItem);
-
-// Image upload
-router.post('/items/upload-image', uploadItemImage.single('image'), uploadImage);
-
-// Bulk upload
-router.get('/items/template', downloadTemplate);
-router.post('/items/bulk-upload', uploadExcel.single('file'), bulkUpload);
+// Courses management
+router.get('/courses', adminGetCourses);
+router.post('/courses', uploadCourseImage.single('image'), createCourse);
+router.put('/courses/:id', uploadCourseImage.single('image'), updateCourse);
+router.delete('/courses/:id', deleteCourse);
 
 // Quotations management
 router.get('/quotations', adminGetQuotations);
@@ -65,8 +55,8 @@ router.put('/settings/quote', updateQuoteSettings);
 
 // Store settings
 router.get('/settings/store', getStoreSettings);
-router.put('/settings/store', uploadItemImage.single('logo'), updateStoreSettings);
-router.post('/settings/store/logo', uploadItemImage.single('logo'), uploadLogo);
+router.put('/settings/store', uploadStoreImage.single('logo'), updateStoreSettings);
+router.post('/settings/store/logo', uploadStoreImage.single('logo'), uploadLogo);
 router.delete('/settings/store/logo', deleteLogo);
 
 module.exports = router;

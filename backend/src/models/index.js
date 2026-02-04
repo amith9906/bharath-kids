@@ -1,14 +1,22 @@
-
 const { sequelize } = require('../config/database');
 
 // Ensure all models are loaded and registered before associations
 const User = require('./User');
-const Item = require('./Item');
+const Course = require('./Course');
 const Quotation = require('./Quotation');
 const QuotationItem = require('./QuotationItem');
 const QuotationStatusHistory = require('./QuotationStatusHistory');
 const QuoteSettings = require('./QuoteSettings');
 const StoreSettings = require('./StoreSettings');
+const Registration = require('./Registration');
+
+// User - Course (Many-to-Many through Registration)
+User.belongsToMany(Course, { through: Registration, foreignKey: 'userId', as: 'registeredCourses' });
+Course.belongsToMany(User, { through: Registration, foreignKey: 'courseId', as: 'registeredUsers' });
+Registration.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+Registration.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
+User.hasMany(Registration, { foreignKey: 'userId', as: 'registrations' });
+Course.hasMany(Registration, { foreignKey: 'courseId', as: 'registrations' });
 
 // Define associations
 
@@ -20,9 +28,9 @@ Quotation.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 Quotation.hasMany(QuotationItem, { foreignKey: 'quotationId', as: 'items' });
 QuotationItem.belongsTo(Quotation, { foreignKey: 'quotationId', as: 'quotation' });
 
-// Item - QuotationItem (One-to-Many)
-Item.hasMany(QuotationItem, { foreignKey: 'itemId', as: 'quotationItems' });
-QuotationItem.belongsTo(Item, { foreignKey: 'itemId', as: 'item' });
+// Course - QuotationItem (One-to-Many)
+Course.hasMany(QuotationItem, { foreignKey: 'courseId', as: 'quotationItems' });
+QuotationItem.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
 
 // Quotation - QuotationStatusHistory (One-to-Many)
 Quotation.hasMany(QuotationStatusHistory, { foreignKey: 'quotationId', as: 'statusHistory' });
@@ -58,11 +66,12 @@ const syncDatabase = async (force = false) => {
 module.exports = {
   sequelize,
   User,
-  Item,
+  Course,
   Quotation,
   QuotationItem,
   QuotationStatusHistory,
   QuoteSettings,
   StoreSettings,
+  Registration,
   syncDatabase
 };

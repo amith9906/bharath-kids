@@ -36,8 +36,10 @@ const LanguageSwitcher = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-primary-600 rounded-lg hover:bg-gray-100 transition-colors"
+        title="Change Language / भाषा बदलें / ಭಾಷೆ ಬದಲಿಸಿ"
       >
         <FiGlobe className="w-5 h-5" />
+        <span className="hidden sm:inline text-sm font-medium mr-1">Language:</span>
         <span className="text-sm font-medium">{currentLanguage.nativeName}</span>
         <FiChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>

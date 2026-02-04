@@ -1,4 +1,4 @@
-const { Quotation, QuotationItem, Item, User } = require('../models');
+const { Quotation, QuotationItem, Course, User, Registration } = require('../models');
 const { Op } = require('sequelize');
 const { sequelize } = require('../config/database');
 
@@ -74,11 +74,28 @@ const getDashboardStats = async (req, res) => {
       limit: 10
     });
 
-    // Total items count
-    const totalItems = await Item.count({ where: { isActive: true } });
+    // Total courses count
+    const totalCourses = await Course.count({ where: { isActive: true } });
 
-    // Total users count
-    const totalUsers = await User.count({ where: { role: 'user', isActive: true } });
+    // Total users count (all users who registered)
+    const totalUsers = await User.count({ where: { role: 'user' } });
+
+    // Active users count
+    const activeUsers = await User.count({ where: { role: 'user', isActive: true } });
+
+    // New users this month
+    const newUsersThisMonth = await User.count({
+      where: {
+        role: 'user',
+        createdAt: { [Op.gte]: startOfMonth }
+      }
+    });
+
+    // Total registrations count
+    const totalRegistrations = await Registration.count();
+
+    // Active registrations count
+    const activeRegistrations = await Registration.count({ where: { status: 'active' } });
 
     // Today's quotations
     const startOfDay = new Date();
@@ -90,10 +107,94 @@ const getDashboardStats = async (req, res) => {
       }
     });
 
-    // Monthly trend (last 6 months)
+    // User growth trend (last 6 months)
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
+    const userGrowthTrend = await User.findAll({
+      attributes: [
+        [sequelize.fn('DATE_TRUNC', 'month', sequelize.col('created_at')), 'month'],
+        [sequelize.fn('COUNT', sequelize.col('id')), 'count']
+      ],
+      where: {
+        role: 'user',
+        createdAt: { [Op.gte]: sixMonthsAgo }
+      },
+      group: [sequelize.fn('DATE_TRUNC', 'month', sequelize.col('created_at'))],
+      order: [[sequelize.fn('DATE_TRUNC', 'month', sequelize.col('created_at')), 'ASC']]
+    });
+
+    // State-wise user distribution
+    const stateDistribution = await User.findAll({
+      attributes: [
+        'state',
+        [sequelize.fn('COUNT', sequelize.col('id')), 'count']
+      ],
+      where: {
+        role: 'user',
+        state: { [Op.ne]: null }
+      },
+      group: ['state'],
+      order: [[sequelize.fn('COUNT', sequelize.col('id')), 'DESC']],
+      limit: 10
+    });
+
+    // City-wise user distribution (top 10 cities)
+    const cityDistribution = await User.findAll({
+      attributes: [
+        'city',
+        'state',
+        [sequelize.fn('COUNT', sequelize.col('id')), 'count']
+      ],
+      where: {
+        role: 'user',
+        city: { [Op.ne]: null }
+      },
+      group: ['city', 'state'],
+      order: [[sequelize.fn('COUNT', sequelize.col('id')), 'DESC']],
+      limit: 10
+    });
+
+    // Popular courses (by registration count)
+    const popularCourses = await Registration.findAll({
+      attributes: [
+        'courseId',
+        [sequelize.fn('COUNT', sequelize.col('Registration.id')), 'registrationCount']
+      ],
+      include: [
+        {
+          model: Course,
+          as: 'course',
+          attributes: ['id', 'title', 'category', 'price']
+        }
+      ],
+      group: ['courseId', 'course.id'],
+      order: [[sequelize.fn('COUNT', sequelize.col('Registration.id')), 'DESC']],
+      limit: 5
+    });
+
+    // State-wise registrations
+    const stateRegistrations = await Registration.findAll({
+      attributes: [
+        [sequelize.fn('COUNT', sequelize.col('Registration.id')), 'count']
+      ],
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['state'],
+          where: {
+            state: { [Op.ne]: null }
+          }
+        }
+      ],
+      group: ['user.state', 'user.id'],
+      order: [[sequelize.fn('COUNT', sequelize.col('Registration.id')), 'DESC']],
+      limit: 10,
+      subQuery: false
+    });
+
+    // Monthly trend (last 6 months)
     const monthlyTrend = await Quotation.findAll({
       attributes: [
         [sequelize.fn('DATE_TRUNC', 'month', sequelize.col('created_at')), 'month'],
@@ -115,14 +216,39 @@ const getDashboardStats = async (req, res) => {
         thisMonthQuotations,
         thisMonthRevenue,
         todayQuotations,
-        totalItems,
-        totalUsers
+        totalCourses,
+        totalUsers,
+        activeUsers,
+        newUsersThisMonth,
+        totalRegistrations,
+        activeRegistrations
       },
       recentQuotations,
       monthlyTrend: monthlyTrend.map(item => ({
         month: item.get('month'),
         count: parseInt(item.get('count')),
         total: parseFloat(item.get('total')) || 0
+      })),
+      userGrowthTrend: userGrowthTrend.map(item => ({
+        month: item.get('month'),
+        count: parseInt(item.get('count'))
+      })),
+      stateDistribution: stateDistribution.map(item => ({
+        state: item.state,
+        count: parseInt(item.get('count'))
+      })),
+      cityDistribution: cityDistribution.map(item => ({
+        city: item.city,
+        state: item.state,
+        count: parseInt(item.get('count'))
+      })),
+      popularCourses: popularCourses.map(item => ({
+        course: item.course,
+        registrationCount: parseInt(item.get('registrationCount'))
+      })),
+      stateRegistrations: stateRegistrations.map(item => ({
+        state: item.user?.state,
+        count: parseInt(item.get('count'))
       }))
     });
   } catch (error) {

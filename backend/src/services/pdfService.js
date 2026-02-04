@@ -150,12 +150,18 @@ const generateQuotationPDF = async (quotation, options = {}) => {
         // Serial number
         doc.text((index + 1).toString(), colX[0] + 3, rowY, { width: colWidths[0] - 6 });
 
-        // Item name (with brand if available)
-        const itemName = item.item?.brand ? `${item.item.brand} - ${item.itemName}` : item.itemName;
-        doc.text(itemName, colX[1] + 3, rowY, { width: colWidths[1] - 6 });
 
-        // HSN Code
-        doc.text(item.item?.hsnCode || '-', colX[2] + 3, rowY, { width: colWidths[2] - 6 });
+        // Course title (always show)
+        doc.text(item.courseTitle || '-', colX[1] + 3, rowY, { width: colWidths[1] - 6 });
+
+        // If courseDescription exists, show it in smaller font below the title
+        if (item.courseDescription) {
+          doc.fontSize(7).fillColor('#666').text(item.courseDescription, colX[1] + 3, rowY + 10, { width: colWidths[1] - 6 });
+          doc.fontSize(8).fillColor('#000');
+        }
+
+        // HSN Code (optional, may be blank)
+        doc.text(item.hsnCode || '-', colX[2] + 3, rowY, { width: colWidths[2] - 6 });
 
         // Quantity
         doc.text(item.quantity.toString(), colX[3] + 3, rowY, { width: colWidths[3] - 6, align: 'right' });

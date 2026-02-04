@@ -58,6 +58,38 @@ const uploadItemImage = multer({
   }
 });
 
+// Courses upload
+const courseUploadDir = path.join(__dirname, '../../uploads/courses');
+if (!fs.existsSync(courseUploadDir)) {
+  fs.mkdirSync(courseUploadDir, { recursive: true });
+}
+const courseStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, courseUploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, `course-${uniqueSuffix}${ext}`);
+  }
+});
+
+// Store logo upload
+const storeUploadDir = path.join(__dirname, '../../uploads/store');
+if (!fs.existsSync(storeUploadDir)) {
+  fs.mkdirSync(storeUploadDir, { recursive: true });
+}
+const storeStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, storeUploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, `item-${uniqueSuffix}${ext}`);
+  }
+});
+
 const uploadExcel = multer({
   storage: multer.memoryStorage(),
   fileFilter: excelFilter,
@@ -80,6 +112,8 @@ const getUploadPath = (filename) => {
 
 module.exports = {
   uploadItemImage,
+  uploadCourseImage: multer({ storage: courseStorage, fileFilter: imageFilter }),
+  uploadStoreImage: multer({ storage: storeStorage, fileFilter: imageFilter }),
   uploadExcel,
   deleteFile,
   getUploadPath,

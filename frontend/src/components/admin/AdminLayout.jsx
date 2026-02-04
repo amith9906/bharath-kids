@@ -10,10 +10,12 @@ import {
   FiLogOut,
   FiHome,
   FiSettings,
-  FiShoppingBag
+  FiShoppingBag,
+  FiUsers
 } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import LanguageSwitcher from '../common/LanguageSwitcher';
+import WhatsAppButton from '../common/WhatsAppButton';
 
 const AdminLayout = () => {
   const { t } = useTranslation();
@@ -30,7 +32,8 @@ const AdminLayout = () => {
   const menuItems = [
     { path: '/admin', icon: FiGrid, label: t('nav.dashboard'), exact: true },
     { path: '/admin/quotations', icon: FiFileText, label: t('nav.manageQuotations') },
-    { path: '/admin/items', icon: FiPackage, label: t('nav.manageItems') },
+    { path: '/admin/courses', icon: FiPackage, label: t('nav.manageCourses') },
+    { path: '/admin/registrations', icon: FiUsers, label: 'Student Registrations' },
     { path: '/admin/settings/store', icon: FiShoppingBag, label: 'Store Settings' },
     { path: '/admin/settings/quote', icon: FiSettings, label: 'Quote Settings' }
   ];
@@ -128,6 +131,7 @@ const AdminLayout = () => {
           <Outlet />
         </main>
       </div>
+      <WhatsAppButton />
     </div>
   );
 };

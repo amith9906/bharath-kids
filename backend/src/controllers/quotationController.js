@@ -1,4 +1,4 @@
-const { Quotation, QuotationItem, QuotationStatusHistory, Item, User, QuoteSettings } = require('../models');
+const { Quotation, QuotationItem, QuotationStatusHistory, Course, User, QuoteSettings } = require('../models');
 const { validationResult } = require('express-validator');
 const { Op } = require('sequelize');
 const { sequelize } = require('../config/database');
@@ -16,7 +16,8 @@ const createQuotation = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const {
+
+    let {
       customerName,
       customerEmail,
       customerPhone,
@@ -26,8 +27,18 @@ const createQuotation = async (req, res) => {
       notes
     } = req.body;
 
+    // Map legacy itemId to courseId for backward compatibility
+    if (items && Array.isArray(items)) {
+      items = items.map(item => {
+        if (item.itemId && !item.courseId) {
+          return { ...item, courseId: item.itemId };
+        }
+        return item;
+      });
+    }
+
     if (!items || items.length === 0) {
-      return res.status(400).json({ message: 'At least one item is required.' });
+      return res.status(400).json({ message: 'At least one course is required.' });
     }
 
     // Calculate totals
@@ -38,26 +49,26 @@ const createQuotation = async (req, res) => {
     const quotationItemsData = [];
 
     for (const cartItem of items) {
-      const item = await Item.findByPk(cartItem.itemId);
+      const course = await Course.findByPk(cartItem.courseId);
 
-      if (!item || !item.isActive) {
+      if (!course || !course.isActive) {
         await transaction.rollback();
-        return res.status(400).json({ message: `Item ${cartItem.itemId} not found or inactive.` });
+        return res.status(400).json({ message: `Course ${cartItem.courseId} not found or inactive.` });
       }
 
       const quantity = cartItem.quantity || 1;
-      const unitPrice = parseFloat(item.price);
+      const unitPrice = parseFloat(course.price);
       const itemSubtotal = unitPrice * quantity;
 
       // Calculate discount
-      const discountPercent = parseFloat(item.discountPercent) || 0;
+      const discountPercent = parseFloat(course.discountPercent) || 0;
       const discountAmount = (itemSubtotal * discountPercent) / 100;
       const taxableAmount = itemSubtotal - discountAmount;
 
       // Calculate taxes
-      const igstRate = parseFloat(item.igstRate) || 0;
-      const cgstRate = parseFloat(item.cgstRate) || 0;
-      const sgstRate = parseFloat(item.sgstRate) || 0;
+      const igstRate = parseFloat(course.igstRate) || 0;
+      const cgstRate = parseFloat(course.cgstRate) || 0;
+      const sgstRate = parseFloat(course.sgstRate) || 0;
 
       const igstAmount = (taxableAmount * igstRate) / 100;
       const cgstAmount = (taxableAmount * cgstRate) / 100;
@@ -70,26 +81,22 @@ const createQuotation = async (req, res) => {
       taxTotal += igstAmount + cgstAmount + sgstAmount;
 
       quotationItemsData.push({
-        itemId: item.id,
-        itemName: item.name,
-        itemDescription: item.description,
-        hsnCode: item.hsnCode,
+        courseId: course.id,
+        courseTitle: course.title,
+        courseDescription: course.description,
         quantity,
-        unit: item.unit,
         unitPrice,
         discountPercent,
         discountAmount,
-        taxableAmount,
         igstRate,
-        igstAmount,
         cgstRate,
-        cgstAmount,
         sgstRate,
+        igstAmount,
+        cgstAmount,
         sgstAmount,
         totalPrice
       });
     }
-
     const grandTotal = subtotal - discountTotal + taxTotal;
 
     // Create quotation
@@ -505,7 +512,7 @@ const adminEditQuotation = async (req, res) => {
 const generatePDF = async (req, res) => {
   try {
     const quotation = await Quotation.findByPk(req.params.id, {
-      include: [{ model: QuotationItem, as: 'items', include: [{ model: Item, as: 'item' }] }]
+      include: [{ model: QuotationItem, as: 'items' }]
     });
 
     if (!quotation) {
@@ -540,7 +547,7 @@ const downloadPDF = async (req, res) => {
     if (!quotation.pdfUrl) {
       // Generate PDF if not exists
       const fullQuotation = await Quotation.findByPk(req.params.id, {
-        include: [{ model: QuotationItem, as: 'items', include: [{ model: Item, as: 'item' }] }]
+        include: [{ model: QuotationItem, as: 'items' }]
       });
 
       const pdfResult = await generateQuotationPDF(fullQuotation);

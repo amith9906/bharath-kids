@@ -147,9 +147,20 @@ const ItemCard = ({ item }) => {
           )}
 
           <div className="flex items-baseline gap-2 flex-wrap">
-            <span className="text-lg sm:text-xl font-bold text-primary-600">
-              {formatCurrency(item.price)}
-            </span>
+            {hasDiscount ? (
+              <>
+                <span className="text-lg sm:text-xl font-bold text-primary-600">
+                  {formatCurrency(item.finalFee)}
+                </span>
+                <span className="text-sm sm:text-base text-gray-400 line-through">
+                  {formatCurrency(item.price)}
+                </span>
+              </>
+            ) : (
+              <span className="text-lg sm:text-xl font-bold text-primary-600">
+                {formatCurrency(item.price)}
+              </span>
+            )}
             {item.unit && (
               <span className="text-xs sm:text-sm text-gray-500">/ {item.unit}</span>
             )}

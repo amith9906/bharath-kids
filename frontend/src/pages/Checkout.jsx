@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiCheck, FiArrowLeft, FiDownload, FiLoader } from 'react-icons/fi';
-import { toast } from 'react-toastify';
+import { useNotification } from '../contexts/NotificationContext';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { quotationsAPI } from '../services/api';
@@ -22,6 +22,7 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { items, subtotal, discountTotal, taxTotal, grandTotal, clearCart } = useCart();
   const { user } = useAuth();
+  const { showNotification } = useNotification();
 
   const [formData, setFormData] = useState({
     customerName: user?.name || '',
@@ -67,7 +68,7 @@ const Checkout = () => {
     if (!validate()) return;
 
     if (items.length === 0) {
-      toast.error('Cart is empty');
+      showNotification('Cart is empty', 'error');
       navigate('/items');
       return;
     }
@@ -86,10 +87,10 @@ const Checkout = () => {
       setQuotation(response.data.quotation);
       setSubmitted(true);
       clearCart();
-      toast.success(t('checkout.successTitle'));
+      showNotification(t('checkout.successTitle'), 'success');
     } catch (error) {
       console.error('Quotation submission error:', error);
-      toast.error(error.response?.data?.message || 'Failed to submit quotation');
+      showNotification(error.response?.data?.message || 'Failed to submit quotation', 'error');
     } finally {
       setLoading(false);
     }
@@ -106,10 +107,10 @@ const Checkout = () => {
       // Open PDF in new tab or download
       const fullUrl = `${API_BASE_URL}${pdfUrl}`;
       window.open(fullUrl, '_blank');
-      toast.success('PDF downloaded successfully');
+      showNotification('PDF downloaded successfully', 'success');
     } catch (error) {
       console.error('PDF download error:', error);
-      toast.error('Failed to download PDF');
+      showNotification('Failed to download PDF', 'error');
     } finally {
       setDownloadingPDF(false);
     }

@@ -33,6 +33,9 @@ const StoreSettings = () => {
     instagram: '',
     workingHours: '',
     aboutText: '',
+    mission: '',
+    vision: '',
+    aboutWebsite: '',
     footerText: '',
     primaryColor: '#4F46E5'
   });
@@ -677,6 +680,48 @@ const StoreSettings = () => {
                 rows={3}
                 className="input"
                 placeholder="Tell customers about your store..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Mission
+              </label>
+              <textarea
+                name="mission"
+                value={settings.mission}
+                onChange={handleChange}
+                rows={3}
+                className="input"
+                placeholder="What is your mission statement?"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Vision
+              </label>
+              <textarea
+                name="vision"
+                value={settings.vision}
+                onChange={handleChange}
+                rows={3}
+                className="input"
+                placeholder="What is your vision for the future?"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                About Website
+              </label>
+              <textarea
+                name="aboutWebsite"
+                value={settings.aboutWebsite}
+                onChange={handleChange}
+                rows={4}
+                className="input"
+                placeholder="Describe your website and what it offers..."
               />
             </div>
 

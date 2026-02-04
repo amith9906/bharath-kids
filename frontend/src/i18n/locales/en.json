@@ -195,5 +195,165 @@
     "en": "English",
     "hi": "हिंदी",
     "kn": "ಕನ್ನಡ"
+  },
+  "bharathKids": {
+    "hero": {
+      "title": "BharathKids",
+      "tagline": "Shaping Confident, Focused & Value-Driven Children for India's Future 🇮🇳",
+      "description": "A 60-Day Online Transformation Journey for Children (Age 7–15). Because today's kids don't need more screens… they need direction, confidence, values and a voice.",
+      "enrollButton": "Enroll Your Child",
+      "learnMore": "Learn More"
+    },
+    "kidsHave": {
+      "title": "They have:",
+      "mobile": "Mobile phones in their hands",
+      "information": "Information everywhere",
+      "entertainment": "Entertainment anytime"
+    },
+    "kidsMissing": {
+      "title": "But they are slowly losing:",
+      "focus": "Focus and patience",
+      "confidence": "Confidence to speak",
+      "respect": "Respect, discipline & values",
+      "culture": "Connection with Indian culture",
+      "control": "Control over mobile usage",
+      "learning": "Love for learning"
+    },
+    "parentConcerns": {
+      "title": "Many parents feel this every day:",
+      "concern1": "\"My child is intelligent, but distracted.\"",
+      "concern2": "\"My child studies, but doesn't understand deeply.\"",
+      "concern3": "\"My child knows English, but cannot speak Hindi confidently.\"",
+      "concern4": "\"My child is always on mobile.\""
+    },
+    "whatIs": {
+      "badge": "🌱 What Is BharathKids?",
+      "title": "Not Tuition. A Transformation.",
+      "description": "BharathKids is a 60-day online child transformation program designed to rebuild what modern life is slowly taking away—and add the skills today's world truly needs.",
+      "combineTitle": "We combine:",
+      "smartLearning": "Smart Learning",
+      "communication": "Confident Communication",
+      "values": "Indian Values",
+      "digitalHabits": "Healthy Digital Habits",
+      "aiAwareness": "Future AI Awareness"
+    },
+    "promise": {
+      "badge": "🌟 Our Promise to Parents",
+      "title": "In Just 60 Days, Your Child Will:",
+      "speakHindi": "Speak Hindi confidently without fear",
+      "thinkMaths": "Think clearly in Maths, not just memorize",
+      "reduceMobile": "Reduce mobile addiction and improve focus",
+      "developDiscipline": "Develop discipline, respect & responsibility",
+      "gainConfidence": "Gain confidence to speak and express ideas",
+      "understandAI": "Understand AI & technology safely"
+    },
+    "curriculum": {
+      "mathsTitle": "Maths – Remove Fear, Build Thinking",
+      "mathsSubtitle": "Today, many children fear Maths. We change that.",
+      "mathsPoints": ["Mental maths & real-life problems", "Logical thinking & puzzles", "Confidence-building practice"],
+      "mathsResult": "A child who thinks, not panics.",
+      "hindiTitle": "Spoken Hindi – Give Your Child a Voice ⭐",
+      "hindiSubtitle": "Hindi is our national language, but many children hesitate to speak it.",
+      "hindiPoints": ["Daily spoken Hindi practice", "Simple sentences, no heavy grammar", "Role plays, stories & conversations"],
+      "hindiResult": "Your child speaks Hindi naturally and confidently.",
+      "mobileTitle": "Mobile De-Addiction – Teach Control, Not Fear",
+      "mobileSubtitle": "We don't say \"don't use mobile\". We teach how to control it.",
+      "mobilePoints": ["Screen-time awareness", "Offline brain activities", "Parent-guided habit tracking"],
+      "mobileResult": "Reduced screen time, improved focus.",
+      "valuesTitle": "Values & Ethics – Build Character Early",
+      "valuesSubtitle": "Marks can be earned later. Values must be built now.",
+      "valuesPoints": ["Respect for parents & teachers", "Discipline & responsibility", "Indian culture & moral stories"],
+      "valuesResult": "A good human being, not just a good student.",
+      "aiTitle": "Basic AI Knowledge – Prepare for the Future",
+      "aiSubtitle": "The future belongs to children who understand technology wisely.",
+      "aiPoints": ["What is AI?", "AI in daily life", "Good vs bad use of technology"],
+      "aiResult": "Awareness without addiction."
+    },
+    "testimonials": {
+      "title": "What Parents Say",
+      "testimonial1": {
+        "name": "Priya Sharma",
+        "parent": "Mother of 9-year-old",
+        "feedback": "My daughter was always hesitant to speak Hindi. After BharathKids, she speaks confidently and even enjoys Hindi stories now!"
+      },
+      "testimonial2": {
+        "name": "Rajesh Kumar",
+        "parent": "Father of 12-year-old",
+        "feedback": "The mobile addiction program worked wonders. My son now voluntarily keeps his phone aside during study time."
+      },
+      "testimonial3": {
+        "name": "Ananya Menon",
+        "parent": "Mother of 8-year-old",
+        "feedback": "Mathematics was a nightmare for my child. BharathKids made it fun and logical. He actually looks forward to math now!"
+      },
+      "testimonial4": {
+        "name": "Suresh Patel",
+        "parent": "Father of 14-year-old",
+        "feedback": "I gained confidence in speaking English fluently. The interactive sessions and practice exercises were very helpful."
+      }
+    },
+    "whatKidsMissing": {
+      "title": "What Are Today's Kids Really Missing?",
+      "subtitle": "Today's children are growing up in a fast, digital world."
+    }
+  },
+  "about": {
+    "hero": {
+      "title": "Learn About"
+    },
+    "aboutWebsite": {
+      "default": ", a leading educational institute dedicated to providing top-quality tuition, academic coaching, and skill development programs. Our institute was founded with a clear mission: to ensure every student receives personalized attention and achieves academic excellence.",
+      "paragraph2": "At {{storeName}}, we are committed to nurturing young minds with comprehensive knowledge and practical skills. Our experienced tutors provide one-on-one attention and innovative teaching methods to help students excel in academics and develop essential life skills for a successful future."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "default": "Our mission is driven by our belief in education's transformative power and commitment to positively impacting students' lives, not just by grading them in prestigious companies."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "default": "GLR Edutech aims to offer high-quality education, fostering innovation, critical thinking, and personal development, making it accessible and empowering individuals to contribute to the tech industry."
+    },
+    "features": {
+      "title": "Features",
+      "subtitle": "Comprehensive Course Content",
+      "description": "Empower your learning journey with our comprehensive course content, featuring live classes, interactive quizzes, practical assignments, live webinars, and dedicated support services.",
+      "liveClasses": {
+        "title": "Live Classes",
+        "description": "Interactive live sessions with industry experts"
+      },
+      "assignments": {
+        "title": "Practical Assignments",
+        "description": "Hands-on projects to reinforce learning"
+      },
+      "webinars": {
+        "title": "Live Webinars",
+        "description": "Regular industry insights and guest lectures"
+      },
+      "support": {
+        "title": "Dedicated Support",
+        "description": "24/7 student support and mentorship"
+      }
+    },
+    "founder": {
+      "title": "Meet Our Founder",
+      "name": "Shivaramakrishna M",
+      "paragraph1": "BharathKids was born from a simple but powerful dream—a dream where Indian children grow up not just smart in academics, but strong in values, confident in communication, disciplined in habits, and proud of their culture.",
+      "paragraph2": "Shivaramakrishna M deeply observed today's children and families. He noticed that children are not lacking intelligence—but they are slowly losing focus, patience, respect, confidence, and connection with real life.",
+      "paragraph3": "Mobile screens are replacing conversations. Marks are replacing understanding. Technology is growing faster than values.",
+      "paragraph4": "As an Indian and as someone who strongly believes that the future of the nation depends on the character of its children, Shivaramakrishna M felt a responsibility to act.",
+      "missesTitle": "BharathKids is his effort to give children what modern education often misses:",
+      "misses": [
+        "The confidence to speak without fear",
+        "The habit of disciplined learning",
+        "Respect for parents, teachers and society",
+        "Love for Indian values and culture",
+        "Wise use of technology, not addiction"
+      ]
+    },
+    "achievements": {
+      "satisfaction": "Student Satisfaction",
+      "successRate": "Success Rate",
+      "completion": "Course Completion"
+    }
   }
 }

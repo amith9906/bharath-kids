@@ -32,14 +32,25 @@ export const StoreProvider = ({ children }) => {
     instagram: '',
     workingHours: '',
     aboutText: '',
+    mission: '',
+    vision: '',
+    aboutWebsite: '',
     footerText: '',
     primaryColor: '#4F46E5'
   });
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     fetchSettings();
   }, []);
+
+  // Inject primary color as CSS variable
+  useEffect(() => {
+    if (settings.primaryColor) {
+      document.documentElement.style.setProperty('--primary-color', settings.primaryColor);
+    }
+  }, [settings.primaryColor]);
 
   const fetchSettings = async () => {
     try {
@@ -56,6 +67,7 @@ export const StoreProvider = ({ children }) => {
 
   const getLogoUrl = () => {
     if (!settings.logoUrl) return null;
+    // Always use getImageUrl to resolve the full URL
     return getImageUrl(settings.logoUrl);
   };
 

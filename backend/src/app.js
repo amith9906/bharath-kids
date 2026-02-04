@@ -10,10 +10,11 @@ const { initTwilioClient } = require('./services/whatsappService');
 
 // Import routes
 const authRoutes = require('./routes/auth');
-const itemRoutes = require('./routes/items');
+const courseRoutes = require('./routes/courses');
 const quotationRoutes = require('./routes/quotations');
 const adminRoutes = require('./routes/admin');
 const settingsRoutes = require('./routes/settings');
+const registrationRoutes = require('./routes/registrations');
 
 const app = express();
 
@@ -33,10 +34,11 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/items', itemRoutes);
+app.use('/api/courses', courseRoutes);
 app.use('/api/quotations', quotationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/registrations', registrationRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
