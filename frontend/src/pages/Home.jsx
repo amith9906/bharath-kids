@@ -562,7 +562,7 @@ const Home = () => {
               Get In Touch
             </h2>
             <p className="text-center text-xl text-gray-600 mb-12">
-              <strong>📧 Email:</strong> support@bharathkids.com<br />
+              <strong>📧 Email:</strong>bharathkids1@gmail.com<br />
               <strong>📱 Contact / WhatsApp:</strong> {store.whatsapp || store.phone || '__________'}
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
