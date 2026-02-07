@@ -620,7 +620,7 @@ const Home = () => {
 
             <div className="text-center mt-12">
               <p className="text-2xl font-bold mb-4" style={{ color: 'var(--primary-color)' }}>
-                BharathKids
+                Bharath Kids
               </p>
               <p className="text-xl text-gray-700">
                 Shaping Confident, Focused & Value-Driven Children for India's Future 🇮🇳
