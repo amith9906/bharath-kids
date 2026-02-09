@@ -13,7 +13,7 @@ export const useStore = () => {
 
 export const StoreProvider = ({ children }) => {
   const [settings, setSettings] = useState({
-    storeName: 'My Store',
+    storeName: 'Bharath Kids',
     tagline: '',
     logoUrl: null,
     address: '',

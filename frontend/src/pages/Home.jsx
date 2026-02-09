@@ -142,15 +142,13 @@ const Home = () => {
         <div className="absolute inset-0 bg-black opacity-10"></div>
         <div className="max-w-6xl mx-auto px-4 sm:px-8 relative z-10">
           <div className="text-center">
-            {logoUrl && (
-              <img
-                src={logoUrl}
-                alt={store.storeName}
-                className="h-24 sm:h-32 w-auto mx-auto mb-8 bg-white rounded-2xl shadow-2xl p-3"
-              />
-            )}
+            <img
+              src="/image2.jpeg"
+              alt={store.storeName}
+              className="h-24 sm:h-32 w-auto mx-auto mb-8 bg-white rounded-2xl shadow-2xl p-3"
+            />
             <h1 className="text-4xl sm:text-6xl font-extrabold mb-6 drop-shadow-lg leading-tight">
-              {store.storeName || 'BharathKids'}
+              {store.storeName || 'Bharath Kids'}
             </h1>
             <p className="text-lg sm:text-2xl mb-4 max-w-3xl mx-auto font-medium text-blue-100">
               {store.tagline || 'Shaping Confident, Focused & Value-Driven Children for India\'s Future 🇮🇳'}

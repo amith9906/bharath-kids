@@ -10,7 +10,7 @@ const getStoreSettings = async (req, res) => {
     if (!settings) {
       // Create default settings
       settings = await StoreSettings.create({
-        storeName: 'My Store',
+        storeName: 'Bharath Kids',
         tagline: 'Your trusted partner for quality products',
         workingHours: 'Mon-Sat: 9:00 AM - 7:00 PM'
       });

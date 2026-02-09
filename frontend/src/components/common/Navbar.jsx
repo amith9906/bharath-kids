@@ -59,20 +59,20 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            {logoUrl ? (
+            {/* {logoUrl ? ( */}
               <img
-                src={logoUrl}
+                 src="/image2.jpeg"
                 alt={store.storeName}
                 className="h-10 w-auto object-contain"
               />
-            ) : null}
+            {/* ) : null} */}
             <div className="flex flex-col">
               <span className="text-xl sm:text-2xl font-bold leading-tight" style={{ color: 'var(--primary-color)' }}>
                 {store.storeName || t('common.appName')}
               </span>
-              {store.tagline && (
+              {/* {store.tagline && (
                 <span className="text-xs text-gray-500 hidden sm:block">{store.tagline}</span>
-              )}
+              )} */}
             </div>
           </Link>
 

@@ -11,7 +11,7 @@ const StoreSettings = sequelize.define('StoreSettings', {
     type: DataTypes.STRING(255),
     allowNull: true,
     field: 'store_name',
-    defaultValue: 'My Store'
+    defaultValue: 'Bharath Kids'
   },
   tagline: {
     type: DataTypes.STRING(500),
